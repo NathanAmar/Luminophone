@@ -1,0 +1,1032 @@
+<!DOCTYPE html>
+<html>
+    
+    <head>
+        <style>
+
+        
+           
+           
+            canvas {
+                position: absolute;
+               
+
+            }
+        
+        
+        
+        
+        
+        input {
+            display: table;
+            margin-left: 30px;
+        }
+        
+        #bonjour {
+            margin-left: 40px;
+        }
+        
+       
+        
+        p3 {
+            position: absolute;
+            font-family: sans-serif;
+            font-size: 26px;
+            margin-left: 300px;
+            margin-top: 15px;
+            border: 1px solid black;
+            border-radius: 100px;
+            width: 30px;
+            height: 30px;
+            text-align: center;
+            vertical-align: middle;
+            opacity: 0.2;
+        }
+        
+        p3:hover {
+            opacity: 1;
+        }
+        
+        div.alldivs {
+            position: relative;
+            float: left;
+            height: 430px;
+            width: 350px;
+            border: 2px dashed darkblue;
+            margin: 10px;
+            border-radius: 40px;
+        }
+        
+        div.alldivs:hover {
+            border: 5px solid red;
+            height: 425px;
+            width: 345px;
+            
+        }
+        
+        div.alldivs2 {
+            position: relative;
+            float: left;
+            width: 350px;
+            border: 2px dashed darkblue;
+            margin: 10px;
+            border-radius: 40px;
+        }
+        
+        div.alldivs2:hover {
+            border: 5px solid red;
+            width: 345px;
+            
+        }
+        
+        p {
+            margin-left: 30px;
+        }
+        
+        p2 {
+            margin-left: 20px;
+            text-decoration: underline;
+            font-size: 20px;
+        }
+        
+        
+        .mydiv {
+            position: relative;
+        }
+        
+        .center {
+            width: 10px;
+            height: 10px;
+            background-color: white;
+            margin-top: 544px;
+            position: absolute;
+            margin-left: 544px;
+            border-radius: 100px;
+            border: 1px solid black;
+        }
+        
+        #tour {
+            margin-top: -11px;
+            margin-left: -11px;
+        }
+        
+        #tour2 {
+            margin-top: -7px;
+            margin-left: -7px;
+        }
+        
+        #dcanvas {
+            margin-left: 1200px;
+        }
+        
+        #simu{
+            height: 1000px;
+            width: 20000px;
+            border: 1px solid black;
+            margin-top: 1200px;
+            
+        }
+        
+        
+            </style>
+        <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.1/jquery.min.js"></script>
+        <script src="http://www.w3schools.com/js/myScript1.js"></script>
+        <script src="https://www.gstatic.com/firebasejs/3.6.2/firebase.js"></script>
+        
+    </head>
+    <body onload="draw()" height="1000000px">
+        
+        
+            <button onclick="createDISCS()" class="click"> Generer Disque </button>
+            <button class='add'> + </button>
+            <button class="afficher"> afficher </button>
+            <button class="masquer"> Masquer </button>
+            <button class="save" onclick="save()"> Enregistrer </button>
+            <button class="restore" onclick="restore()"> Restaurer la derniere sauvegarde </button>
+            <button class="tout"> Masquer tout </button>
+            <button class="sim" onclick="simulation()"> Simulation </button>
+                    <script src="/JqueryLibrary.js"> </script>
+        <script>
+           
+        
+         
+           
+            $('.sim').hide();
+            $('.afficher').hide();
+            $('.masquer').hide();
+            $('.tout').hide();
+            
+            var angles = [];
+        
+          
+          var num2 = prompt("Nombre de disques :");
+          var x = parseInt(num2);
+        
+        var discs = [];
+        
+          if (x>1){
+              var disqueR = confirm("disques reguliers ?");
+          };
+        
+        if (disqueR) {
+            var disqueR2 = true;
+        } else {
+            var disqueR3 = true;
+        };
+        
+        var fout = confirm('test (OK) ou frequence (annuler)');
+        
+        if (!fout) {
+            var vit = prompt('Vitesse ? (tours/sec)');
+            var speed = parseFloat(vit);
+            var har = prompt("Nombre d'harmoniques :");
+            var harmonique = parseFloat(har);
+        }
+        if (!fout) {
+            $('.save').hide();
+            $('.restore').hide();
+        }
+        
+        var v = 1;
+        
+        var speeds = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18];
+        var speeds2 = [];
+        while (v < 18.1) {
+            speeds2.push(v.toFixed(1));
+            v += 0.1;
+        };
+        
+        var ids = [];
+        var simula = 5000;
+        
+        
+        
+            function disque1 (x,y,z,a, id, height) {
+                
+                
+                var mycanvas = document.createElement("canvas");
+                mycanvas.id = id;
+                mycanvas.height = height;
+                mycanvas.width = height;
+                var mydiv = document.getElementById("mydiv");
+                document.body.appendChild(mycanvas);
+                var div2 = document.createElement("div");
+                div2.setAttribute('class','center');
+                document.body.appendChild(div2);
+                $('.center').hide();
+                ids.push(id);
+                
+                var data = [];
+                var colors = [];
+            
+            for (i=0 ; i<360/(x+y+z+a); i++) {
+                data.push(x);
+                data.push(y);
+                data.push(z);
+                data.push(a);
+            };
+            
+            
+            for (i=0; i<(data.length /2)+2 ; i++ ) {
+               
+               colors.push("#000000");
+               colors.push("#FFF");
+               //colors.push("#000000");
+                
+            };
+            
+            function degreesToRadians(degrees) {
+                return (degrees * Math.PI)/180;
+            }
+        function sumTo(a, i) {
+            var sum = 0;
+            for (var j = 0; j < i; j++) {
+                sum += a[j];
+            }
+            return sum;
+        }
+            
+            function drawSegment(canvas, context, i) {
+                context.save();
+                var centerX = Math.floor(canvas.width / 2);
+                var centerY = Math.floor(canvas.height / 2);
+                radius = Math.floor(canvas.width / 2);
+                
+                var startingAngle = degreesToRadians(sumTo(data, i));
+                var arcSize = degreesToRadians(data[i]);
+                var startingAngle2 = startingAngle + arcSize /5;
+                var endingAngle = startingAngle + arcSize;
+                context.beginPath();
+                context.moveTo(centerX, centerY);
+              //  if (i%4 == 0  ) {
+              //      context.arc(centerX, centerY, radius + 100 ,
+              //                  startingAngle, startingAngle2, false);
+              //                  context.closePath()
+             //       context.fillStyle = "#F00";
+             //       context.fill();
+             //       context.restore();
+             //       context.save();
+             //       context.beginPath();
+             //       context.moveTo(centerX, centerY);
+                    
+               // }
+                context.arc(centerX, centerY, radius,
+                            startingAngle, endingAngle , false);
+                            context.closePath();
+                            
+                            
+                            if (i%2 == 1 && op == 1) {
+                                context.globalAlpha = 0;
+                            };
+                            
+                            
+                           context.fillStyle = colors[i];
+                           
+                           context.fill();
+                           
+                           context.strokeStyle="black";
+                            
+                           //context.stroke();
+                          
+                           
+                           
+                            context.restore();
+                            
+                            
+            }
+        
+        
+        
+        
+        canvas = document.getElementById(id);
+        var context = canvas.getContext("2d");
+        var i10 = 0;
+        for (i=0 ; i<4 * 360/(x+y+z+a); i++) {
+           drawSegment(canvas, context, i10);
+           i10 += 1;
+           
+           
+           
+        }
+        
+        
+        
+            };
+        
+        
+        
+    
+        
+        var nameid = "piechart";
+        var nameid2 = "piechart10";
+ 
+        var h = 1100;
+        
+        
+        var z = -1;
+        
+        
+        
+
+        var id1 = "disc1";
+        var id2 = "disc2";
+        var id3 = "disc3";
+        var id4 = "disc4";
+        var id5 = "height";
+        var id20 = "disc2";
+        
+        var i1 = "1";
+        
+        var s = 1;
+        if (fout) {
+        var va = prompt('v')
+        var val =  parseFloat(va);
+        };
+        var id10 = "coucou";
+        var v1 = 0;
+        
+        function form () {
+            
+            if (s>1 && disqueR3) {
+                var para5 = document.createElement("p");
+                var title = document.createTextNode("Distance avec le disque precedent");
+                para5.appendChild(title);
+                
+                var value5 = document.createElement("INPUT");
+                value5.setAttribute("step","1");
+                if (x<6) {
+                    value5.setAttribute("value", "100");
+                    value5.setAttribute("min",0.0000000000000001);
+                } else {
+                    value5.setAttribute('value', (500/x).toString());
+                    value5.setAttribute('max', (500/x));
+                    value5.setAttribute('min', 0.0000000000000001);
+                    value5.setAttribute('width', "100")
+                }
+                
+                value5.setAttribute("type", "number");
+                value5.id = id5;
+                
+            };
+            
+            
+            if (fout){
+            var name = i ;
+            
+            var para10 = document.createElement("p");
+            var title10 = document.createTextNode(" ");
+            para10.appendChild(title10);
+            
+            
+            var coucou = document.createElement("p3");
+            coucou.id = id10;
+            coucou.setAttribute("onclick", "getid.call(this)");
+            var coucou1 = document.createTextNode("x");
+            coucou.appendChild(coucou1);
+            
+            
+            var para12 = document.createElement("p2");
+            var title1 = document.createTextNode("Disque" + " " + s);
+            para12.appendChild(title1);
+            
+            
+            
+            var para1 = document.createElement("p");
+            var title = document.createTextNode("Intervalle" + " " + 1  );
+            para1.appendChild(title);
+            
+            
+            
+            var value = document.createElement("INPUT");
+            v = val.toString();
+            value.setAttribute("value",v);
+            value.setAttribute("step","1");
+            value.setAttribute("min",0);
+            value.setAttribute("type", "number");
+            value.id = id1;
+            
+            
+            var para2 = document.createElement("p");
+            
+            var title = document.createTextNode("Intervalle" + " " + 2  );
+            para2.appendChild(title);
+            
+            var value2 = document.createElement("INPUT");
+
+            value2.setAttribute("value",v);
+            value2.setAttribute("type", "number");
+            value2.setAttribute("min",0);
+            value2.setAttribute("step", "1");
+            value2.id = id2;
+            
+            
+            var para3 = document.createElement("p");
+            var title = document.createTextNode("Intervalle" + " " + 3  );
+            para3.appendChild(title);
+            
+            var value3 = document.createElement("INPUT");
+            value3.setAttribute("min",0);
+            value3.setAttribute("value",v);
+            value3.setAttribute("type", "number");
+            value3.setAttribute("step","1");
+            value3.id = id3;
+            
+            var para4 = document.createElement("p");
+            var title = document.createTextNode("Intervalle" + " " + 4  );
+            para4.appendChild(title);
+            
+            var value4 = document.createElement("INPUT");
+
+
+            value4.setAttribute("value",v);
+            value4.setAttribute("min",0);
+            value4.setAttribute("type", "number");
+            value4.setAttribute("step","1");
+            value4.id = id4;
+            
+            
+            
+            
+            var div = document.createElement("div");
+            div.setAttribute('class','alldivs');
+            div.id = id10;
+            div.appendChild(coucou);
+            div.appendChild(para10);
+            div.appendChild(para12);
+            div.appendChild(para1);
+            div.appendChild(value);
+            div.appendChild(para2);
+            div.appendChild(value2);
+            div.appendChild(para3);
+            div.appendChild(value3);
+            div.appendChild(para4);
+            div.appendChild(value4);
+            document.body.appendChild(div);
+            
+            
+
+
+            
+            } else {
+                
+                var para10 = document.createElement("p");
+                var title10 = document.createTextNode(" ");
+                para10.appendChild(title10);
+                
+                var coucou = document.createElement("p3");
+                coucou.id = id10;
+                coucou.setAttribute("onclick", "getid.call(this)");
+                var coucou1 = document.createTextNode("x");
+                coucou.appendChild(coucou1);
+                
+                var para12 = document.createElement("p2");
+                para12.setAttribute('class','freq');
+                var title1 = document.createTextNode("Disque" + " " + s);
+                para12.appendChild(title1);
+                
+                
+                
+                var para1 = document.createElement("p");
+                var title = document.createTextNode("Frequence (en Hz)");
+                para1.appendChild(title);
+                
+                
+                
+                var value = document.createElement("INPUT");
+                value.setAttribute("step","1");
+                value.setAttribute("min",0);
+                value.setAttribute("type", "number");
+                value.id = id1;
+                
+                
+                var div = document.createElement("div");
+                div.setAttribute('class','alldivs2');
+                div.id = id10;
+                div.height = harmonique * 200 + 200;
+                div.appendChild(coucou);
+                div.appendChild(para10);
+                div.appendChild(para12);
+                div.appendChild(para1);
+                div.appendChild(value);
+                
+                
+                for (b=0; b<harmonique; b++) {
+                    var para1 = document.createElement("p");
+                    var title = document.createTextNode("Harmonique " + (b+1));
+                    para1.appendChild(title);
+                    
+                    
+                    
+                    var valueh = document.createElement("INPUT");
+                    valueh.setAttribute("step","1");
+                    valueh.setAttribute("min",0);
+                    valueh.setAttribute("type", "number");
+                    
+                    valueh.id = id20;
+                    id20 += "1";
+                    div.appendChild(para1);
+                    div.appendChild(valueh);
+                    
+                };
+                var para11 = document.createElement("p");
+                var title11 = document.createTextNode(" ");
+                para11.appendChild(title11);
+                
+                var para2 = document.createElement("p");
+                var title = document.createTextNode("Vitesse : " + speed + " tours/sec");
+                para2.appendChild(title);
+                
+                
+                div.appendChild(para11);
+                if (vit != "?") {
+                div.appendChild(para2);
+                };
+                document.body.appendChild(div);
+                
+            };
+            
+            if (s>1 && disqueR3) {
+                div.appendChild(para5);
+                div.appendChild(value5);
+                
+            };
+            
+            id10 += "1";
+            id1 = id1 + i1;
+            id2 = id2 + i1;
+            id3 = id3 + i1;
+            id4 = id4 + i1;
+            id5 = id5 + i1;
+            s += 1;
+            val += 1;
+            
+        };
+        
+        var finalx = parseInt(num2);
+
+
+
+function textinput () {
+    
+        for (i=1; i<x+1; i++){
+            form();
+        };
+        
+        
+        
+        
+};
+        $('.add').click(function(){
+                        x = 1;
+                        form();
+                        finalx += 1;
+                        x = finalx;
+                        });
+        
+        
+        textinput();
+        
+        
+        var a1 = [];
+        var b1 = [];
+        var c1 = [];
+        var d1 = [];
+        var e1 = [];
+        
+    
+    
+  
+    
+        function arraypush () {
+            
+            
+            id1 = "disc1";
+            id2 = "disc2";
+            id3 = "disc3";
+            id4 = "disc4";
+            id5 = "height";
+            id20 = "disc2";
+            i1 = "1";
+            for (l=1; l<x+1; l++) {
+                if (document.getElementById(id1).value != 'unknown'){
+                a1.push(document.getElementById(id1).value);
+                if(fout){
+                b1.push(document.getElementById(id2).value);
+                c1.push(document.getElementById(id3).value);
+                d1.push(document.getElementById(id4).value);
+                };
+                if (l>1 && disqueR3) {
+                    e1.push(document.getElementById(id5).value);
+                
+                };
+                };
+                
+                if (!fout) {
+                    for (c=0; c<harmonique; c++){
+                        b1.push(document.getElementById(id20).value);
+                        id20 += i1;
+                    };
+                };
+                
+                id1 = id1 + i1;
+                id2 = id2 + i1;
+                id3 = id3 + i1;
+                id4 = id4 + i1;
+                id5 = id5 + i1;
+            };
+            var ok;
+            
+            if (vit === "?") {
+                for (i=0; i<a1.length; i++) {
+                    
+                    for (j=0; j<speeds2.length; j++) {
+                       // f = ((360)/(a1[i]*2))*speeds[j];
+                       // g = f.toFixed(15);
+                       //ok = Math.round(f);
+                       // if (f != g || ok > f){
+                       //     speeds.splice(j, 1);
+                       //     j-=1;
+                       // };
+                        
+                        if (( (a1[i]*2) / speeds2[j]).toFixed(0) != ( (a1[i]*2) / speeds2[j])){
+                            speeds2.splice(j, 1);
+                            j-=1;
+                        };
+                        if (a1[i] < speeds2[j]) {
+                            speeds2.splice(j, 1);
+                            j-=1;
+                        }
+
+
+                    };
+                };
+                
+                
+                
+                switch (speeds2.length) {
+                    case 0 :
+                        alert("Les frequences que vous souhaiter utiliser ne peuvent pas être crees sur le meme disque a la meme vitesse");
+                        break;
+                    case 1 :
+                        alert("Vitesse = " + Speeds2[0]);
+                        speed = speeds2[0];
+                        break;
+                    default:
+                        alert("La vitesse peut être" + speeds2 );
+                        speed = prompt("Laquelle souhaitez vous utiliser ?");
+                        break;
+                    
+                };
+                
+            };
+           
+           
+        };
+        
+     
+     
+     
+     
+        function save () {
+            
+            
+            a1 = [];
+            b1 = [];
+            c1 = [];
+            d1 = [];
+            e1 = [];
+            
+            arraypush();
+
+            document.cookie =  "a2 =" + JSON.stringify(a1);
+            document.cookie =  "b2 =" + JSON.stringify(b1);
+            document.cookie =  "c2 =" + JSON.stringify(c1);
+            document.cookie =  "d2 =" + JSON.stringify(d1);
+            document.cookie =  "e2 =" + JSON.stringify(e1);
+            document.cookie =  "x  =" + JSON.stringify(x);
+
+            
+            //localStorage.setItem("a2", JSON.stringify(a1));
+            //localStorage.setItem("b2", JSON.stringify(b1));
+            //localStorage.setItem("c2", JSON.stringify(c1));
+            //localStorage.setItem("d2", JSON.stringify(d1));
+            //localStorage.setItem("e2", JSON.stringify(e1));
+            
+        };
+       
+       
+       
+       
+       function restore () {
+           
+            $('div').remove();
+           
+           var ar = document.cookie.split(";");
+           
+           var d = 0;
+           var hola = 0;
+           
+           for (i=0; i<6; i++) {
+               d = ar[i];
+               hola = d.split("=");
+               switch (i) {
+                   case 0:
+                   a1 = JSON.parse(hola[1]);
+                   break;
+                   case 1:
+                   b1 = JSON.parse(hola[1]);
+                   case 2:
+                   c1 = JSON.parse(hola[1]);
+                   case 3:
+                   d1 = JSON.parse(hola[1]);
+                   case 4:
+                   e1 = JSON.parse(hola[1]);
+                   case 5:
+                   x =  parseFloat(hola[1]);
+               };
+               
+       };
+           
+           s=1;
+           id1 = "disc1";
+           id2 = "disc2";
+           id3 = "disc3";
+           id4 = "disc4";
+           id5 = "height";
+           i1 = "1";
+           
+           for (i=0; i<x; i++) {
+               form ();
+           };
+           
+          // a1 = JSON.parse(JSON.parse(getCookie('a2')));
+          // b1 = JSON.parse(JSON.parse(getCookie('b2')));
+          // c1 = JSON.parse(JSON.parse(getCookie('c2')));
+          // d1 = JSON.parse(JSON.parse(getCookie('d2')));
+           
+          // if (l>1 && disqueR3) {
+          //     e1 = JSON.parse(JSON.parse(getCookie('e2')));
+          // };
+
+           
+           //a1 = JSON.parse(localStorage.getItem("a2"));
+           //b1 = JSON.parse(localStorage.getItem("b2"));
+           //c1 = JSON.parse(localStorage.getItem("c2"));
+           //d1 = JSON.parse(localStorage.getItem("d2"));
+           
+           //if (l>1 && disqueR3) {
+           //    e1 = JSON.parse(localStorage.getItem("e2"));
+           //};
+           
+          
+           
+           id1 = "disc1";
+           id2 = "disc2";
+           id3 = "disc3";
+           id4 = "disc4";
+           id5 = "height";
+           i1 = "1";
+           for (l=0; l<x; l++) {
+               if (document.getElementById(id1).value != 'unknown'){
+               document.getElementById(id1).value = a1[l].toString();
+               document.getElementById(id2).value = b1[l].toString();
+               document.getElementById(id3).value = c1[l].toString();
+               document.getElementById(id4).value = d1[l].toString();;
+               if (l>0 && disqueR3) {
+                   document.getElementById(id5).value = e1[l].toString();
+               };
+               };
+               id1 = id1 + i1;
+               id2 = id2 + i1;
+               id3 = id3 + i1;
+               id4 = id4 + i1;
+               id5 = id5 + i1;
+
+           };
+         
+          
+       };
+       
+       function disqueC () {
+           arraypush();
+           create();
+       }
+       
+       var mar = 1100;
+       var f;
+       var g;
+       var margin;
+       
+       function disque2 (freq, nameid, h) {
+           disque1(freq, freq,freq,freq, nameid, h);
+       };
+        
+        var op = 0;
+        var margs = [];
+        
+        var coordinateX = [];
+        var coordinateY = [];
+        var steps = simula * 10 ;
+        var opacity;
+        var ops = [];
+        var opacity = 1;
+        function create () {
+            
+            
+            var d = h/x;
+            var freque;
+            var fre;
+            for (k=0; k<x; k++){
+                if(fout) {
+                disque1(parseFloat(a1[k]),parseFloat(b1[k]),parseFloat(c1[k]),parseFloat(d1[k]), nameid, h);
+                ops.push(1);
+                
+                } else {
+                    
+                    margin = (mar - h)/2;
+                    freque = parseFloat(((360*speed)/(a1[k]*2)));
+                    disque2(freque,nameid, h);
+                    ops.push(1);
+                    for (z=0; z<harmonique; z++){
+                        op = 1;
+                       free = parseFloat(((360)/(b1[z+(k*harmonique)]*2))*speed) ;
+                       disque2(free, nameid2, h);
+                       document.getElementById(nameid2).style.margin = margin.toString() + "px" ;
+                       margs.push(margin)
+                       opacity = opacity/2;
+                       ops.push(opacity);
+                       document.getElementById(nameid2).style.opacity= opacity;
+                       nameid2 = nameid2 + "1";
+                       
+                    };
+                    op = 0;
+                    //for (a=0; a<harmonique; a++){
+                      //  fre = parseFloat(((360)/(b1[k*a]*2))*speed);
+                      //  disque2(fre, nameid2, h2);
+                      //  nameid2 = nameid2 + "1";
+                    //};
+                    
+                    };
+                
+                for ( e = 0; e < steps; e++) {
+                    canvas = document.getElementById(nameid);
+                    
+                    coordinateX.push((550 + (550 - 10) * Math.cos((2*Math.PI) * (e/steps))));
+                    coordinateY.push((550 + (550 - 10) * Math.sin((2*Math.PI) * (e/steps))));
+                };
+                
+                margin = (mar - h)/2;
+                margs.push(margin);
+
+                if (disqueR) {
+                    h -= d;
+                    
+                } else {
+                    h -= e1[k];
+                    
+                };
+                var m = margin.toString() + "px";
+                document.getElementById(nameid).style.margin = m;
+                //document.getElementById(nameid2).style.margin = m2;
+                nameid = nameid + "1";
+                
+                
+            };
+            
+            
+
+        };
+        
+
+        var c = x;
+        function getid (b) {
+            x -= 1;
+            s -= 1;
+            
+            var id11 = this.id;
+            var deldiv = [];
+            $('div.[id*="' + id11 + '"]').each(function() {
+                                   code = $(this).attr('id')
+                                   deldiv.push(code);
+                                   });
+            
+            
+            var id12 = deldiv.length - 1;
+            var test1 = document.getElementById(deldiv[id12]);
+            test1.parentNode.removeChild(test1);
+            
+            $('.add').fadeOut('slow');
+        };
+        
+        var clicks = 0;
+        var transparency = [];
+        var pixelData;
+        function simulation () {
+            canvas = document.getElementById("dcanvas");
+            for (j=0; j<coordinateX.length ; j++ ){
+                pixelData = canvas.getContext('2d').getImageData(coordinateX[j], coordinateY[j], 1, 1).data;
+                transparency.push(pixelData[0]);
+            };
+           // alert(transparency);
+            var q = 0
+            var canvsim = document.createElement("canvas");
+            canvsim.id = "simu";
+            canvsim.width = simula * 10;
+            canvsim.height = 255;
+            canvsim.setAttribute('class', "simu");
+            document.body.appendChild(canvsim);
+            var ctx2 = canvsim.getContext("2d");
+            for (i=0; i<transparency.length; i++){
+                ctx2.fillRect(i, (255 - transparency[i]), 1, transparency[i]);
+               // if ( parseInt(transparency[i]) < parseInt(transparency[i+1]) ){
+                //    alert('test');
+                //};
+            };
+        };
+        
+        
+        function createDISCS () {
+            
+            
+            speeds = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18];
+            disque1(360,0,0, 0, "tour", parseFloat(h)+20);
+            disque1(0,360,0, 0, "tour2", parseFloat(h) + 10);
+            var tour = document.getElementById('tour');
+            tour.setAttribute('class','tour');
+            var tour2 = document.getElementById('tour2');
+            tour2.setAttribute('class','tour2');
+            $('.tour').hide();
+            $('.tour2').hide();
+            
+            $('.tout').fadeIn();
+            $('.sim').fadeIn();
+            $('.masquer').fadeIn('fast');
+            
+            $('.masquer').click(function(){
+                                $('.alldivs').animate({"marginLeft": '-=380px'},2000);
+                                $('.alldivs2').animate({"marginLeft": '-=380px'},2000);
+                                $('.afficher').fadeIn('slow');
+                                $('.masquer').hide();
+                                });
+            $('.afficher').click(function(){
+                                 $('div').fadeIn('slow');
+                                 $('.alldivs').animate({"marginLeft": '+=380px'},2000);
+                                 $('.alldivs2').animate({"marginLeft": '+=380px'},2000);
+                                 $('.afficher').hide();
+                                 $('.masquer').fadeIn('fast');
+                                 });
+                                 $('.tout').click(function(){
+                                                   $('.alldivs').fadeOut('slow');
+                                                   $('.alldivs2').fadeOut('slow');
+                                                   $('.click').fadeOut('slow');
+                                                   $('.add').fadeOut('slow');
+                                                   $('.restore').fadeOut('slow');
+                                                   $(this).fadeOut('slow');
+                                                  $('.afficher').fadeOut('slow');
+                                                  $('.masquer').fadeOut('slow');
+                                                  $('.save').fadeOut('slow');
+                                                  $('.center').fadeIn('slow');
+                                                  $('*').animate({"margin": '+=2px'},200);
+                                                  $('.tour2').fadeIn('slow');
+                                                  $('.tour').fadeIn('slow');
+                                                  $('.sim').fadeOut('slow');
+                                                  $('.simu').fadeOut('slow');
+                                                  $('.dcanvas').fadeOut('slow");')
+                                                  });
+                                
+                                clicks += 1;
+                                if (clicks > 1) {
+                                    a1 = [];
+                                    b1 = [];
+                                    c1 = [];
+                                    d1 = [];
+                                    e1 = [];
+                                    //mar += 2000;
+                                };
+                                
+                                disqueC();
+                                var ctx;
+                                var img;
+                                var canvas1 = document.createElement("canvas");
+                                canvas1.height = 1100;
+                                canvas1.width = 1100;
+                                canvas1.id = "dcanvas";
+                                canvas1.setAttribute("class",'dcanvas');
+                                ctx = canvas1.getContext('2d');
+                               document.body.appendChild(canvas1);
+                                for (i=2; i<ids.length; i++){
+                                    img = document.getElementById(ids[i]);
+                                    ctx.drawImage(img, margs[i-2], margs[i-2]);
+                                    ctx.globalAlpha = ops[i-1];
+                                };
+            
+            h = 1100;
+       
+        };
+        
+        
+
+        </script>
+        
+    </body>
+</html>
